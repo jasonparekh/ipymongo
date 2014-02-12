@@ -1,5 +1,5 @@
 import getpass
-import urlparse
+import urllib.parse
 
 import pymongo
 
@@ -50,7 +50,7 @@ def magic_show(self, arg):
         cmd, rest = arg.split(' ', 1)
         return conn.admin.command('getLog', rest)['log']
     else:
-        print 'usage: show (dbs | collections | users | profile | logs | log <name>)'
+        print('usage: show (dbs | collections | users | profile | logs | log <name>)')
 
 def magic_connect(self, arg):
     '''connect <mongodb uri>'''
@@ -75,23 +75,23 @@ def magic_login(self, arg):
     elif len(args) == 2:
         username, password = args
     else:
-        print '''usage: login [username [password] ]'''
+        print('''usage: login [username [password] ]''')
     return shell.user_ns['db'].authenticate(username, password)
 
 def set_uri(uri):
     if uri.startswith('mongodb://'):
         args = {}
-        result = urlparse.urlparse(uri)
+        result = urllib.parse.urlparse(uri)
         db = result.path.strip('/') or 'test'
         auth_args = None
     else:
 #        uri = uri.split(':', 1)[-1]
-        result = urlparse.urlparse(uri)
+        result = urllib.parse.urlparse(uri)
         hostname = result.hostname or '127.0.0.1'
         port = result.port or '27017'
         db = result.path.strip('/') or 'test'
-        args = urlparse.parse_qs(result.query)
-        for k,vs in args.items():
+        args = urllib.parse.parse_qs(result.query)
+        for k,vs in list(args.items()):
             if len(vs) == 1:
                 args[k] = vs[0]
         if 'name' in args or result.username:
