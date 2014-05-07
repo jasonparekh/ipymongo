@@ -74,9 +74,11 @@ def magic_login(self, arg):
         password = getpass.getpass('Password: ')
     elif len(args) == 2:
         username, password = args
+    elif len(args) == 3:
+        username, password, source = args
     else:
-        print('''usage: login [username [password] ]''')
-    return shell.user_ns['db'].authenticate(username, password)
+        print('''usage: login [username [password [source] ] ]''')
+    return shell.user_ns['db'].authenticate(username, password, source=source)
 
 def set_uri(uri):
     if uri.startswith('mongodb://'):
